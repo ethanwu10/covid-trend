@@ -86,7 +86,7 @@ function App() {
         flex: '0 0 auto',
         fontSize: 1
       }} px={3} pt={2}>
-        Created by <Link href='https://ethanwu.dev/'>Ethan Wu</Link>, based on <Link href='https://aatishb.com'>a project</Link> by <Link href='https://aatishb.com'>Aatish Bhatia</Link>. Data from <Link href='https://covidtracking.com'>covidtracking.com</Link>. Source <Link href='https://github.com/ethanwu10/covid-trend'>on GitHub</Link>.
+        Created by <Link href='https://ethanwu.dev/'>Ethan Wu</Link>, based on <Link href='https://aatishb.com/covidtrends'>a project</Link> by <Link href='https://aatishb.com'>Aatish Bhatia</Link>. Data from <Link href='https://covidtracking.com'>covidtracking.com</Link>. Source <Link href='https://github.com/ethanwu10/covid-trend'>on GitHub</Link>.
       </Box>
     </Flex>
   );}
