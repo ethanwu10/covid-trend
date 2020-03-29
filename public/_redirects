@@ -1,0 +1,2 @@
+# Redirect default Netlify subdomain to primary domain
+https://covid-tracker.netlify.com/* https://covid.ethanwu.dev/:splat 301!
