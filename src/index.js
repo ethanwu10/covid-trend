@@ -21,9 +21,10 @@ ReactDOM.render(
       }
     }}>
       <SWRConfig value={{
-        refreshInterval: 5 * 60 * 1000,
+        refreshInterval: 10 * 60 * 1000,
         fetcher: (...args) => fetch(...args).then(r => r.json()),
-        suspense: true
+        suspense: true,
+        revalidateOnFocus: false
       }}>
         <Suspense fallback={<Spinner />}>
           <App />
