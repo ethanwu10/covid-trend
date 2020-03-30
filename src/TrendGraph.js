@@ -5,23 +5,29 @@ import useSWR from 'swr'
 
 const Plot = lazy(() => import('react-plotly.js'))
 
-export default function DataPlot({ states, avgSz }) {
-  const { data: allStatesData, error } = useSWR("https://covidtracking.com/api/states/daily")
-  if (error) {
+export default function DataPlot({ entries, avgSz }) {
+  const { data: allStatesData, error: allStatesDataError } = useSWR('https://covidtracking.com/api/states/daily')
+  const { data: totalData, error: totalDataError } = useSWR('https://covidtracking.com/api/us/daily')
+  if (allStatesDataError || totalDataError) {
     return <Center width='100%' height='100%'>Oh noes! An error occurred!</Center>
   }
-  if (!allStatesData) {
+  if (!allStatesData || !totalData) {
     return (
       <Spinner />
     )
   }
 
-  function getStateData(state) {
-    return allStatesData.filter(d => d.state === state)
+  function getEntryData(entry) {
+    switch (entry) {
+      case 'TOTAL':
+        return totalData
+      default:
+        return allStatesData.filter(d => d.state === entry)
+    }
   }
 
-  function genTrace(state) {
-    const data = getStateData(state)
+  function genTrace(entry) {
+    const data = getEntryData(entry)
     let pi = data.map(d => d.positiveIncrease)
     for (let i = 0; i < pi.length - avgSz; i++) {
       pi[i] = pi.slice(i, i + avgSz).reduce((a, b) => a + b, 0) / avgSz
@@ -32,13 +38,13 @@ export default function DataPlot({ states, avgSz }) {
       y: pi,
       mode: "lines",
       type: "scatter",
-      name: state
+      name: entry
     }
   }
 
   return (
     <Plot
-      data={states.map(s => genTrace(s))}
+      data={entries.map(s => genTrace(s))}
       layout={{
         title: {
           text: "COVID-19 Trend in USA",

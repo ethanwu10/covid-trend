@@ -1,6 +1,6 @@
 import React, { useState, useCallback, useMemo } from 'react';
 import { Box, Card, Link } from 'rebass'
-import { Label, Input, Checkbox } from '@rebass/forms'
+import { Label as RebassLabel, Input, Checkbox } from '@rebass/forms'
 
 import _ from 'lodash'
 import Fuse from 'fuse.js'
@@ -9,7 +9,15 @@ import TrendGraph from './TrendGraph'
 
 import states from './states'
 
-const statesFuse = new Fuse(Object.keys(states).map(k => ({ short: k, long: states[k] })), {
+// Modify label to make sure hidden inputs with position=absolute are positioned correctly
+const Label = ({ sx, ...props }) => <RebassLabel {...props} sx={{position: 'relative', ...sx}} />
+
+const entries = {
+  'TOTAL': 'US Total',
+  ...states
+}
+
+const statesFuse = new Fuse(Object.keys(entries).map(k => ({ short: k, long: entries[k] })), {
   shouldSort: true,
   threshold: 0.6,
   location: 0,
@@ -19,7 +27,7 @@ const statesFuse = new Fuse(Object.keys(states).map(k => ({ short: k, long: stat
 })
 
 function App() {
-  const [selected, setSelected] = useState(_.mapValues(states, () => false));
+  const [selected, setSelected] = useState(_.mapValues(entries, () => false));
   const [avgSz, _setAvgSz] = useState(4);
   const setAvgSz = useCallback((sz) => _setAvgSz(Math.max(1, sz)), [])
   const setSelectedK = useCallback((v, k) => setSelected(s => {
@@ -30,7 +38,7 @@ function App() {
 
   const [filter, setFilter] = useState('')
   const shownStates = useMemo(() => {
-    if (filter === '') return Object.keys(states)
+    if (filter === '') return Object.keys(entries)
     return statesFuse.search(filter).map(r => r.item.short)
   }, [filter])
 
@@ -46,7 +54,7 @@ function App() {
       gridGap: [2, 2, 3]
     }}>
       <Box sx={{gridArea: 'chart'}}>
-        <TrendGraph states={Object.keys(selected).filter((k) => selected[k])} avgSz={avgSz} />
+        <TrendGraph entries={Object.keys(selected).filter((k) => selected[k])} avgSz={avgSz} />
       </Box>
       <Card as='form' p={3} sx={{
         gridArea: 'controls',
@@ -62,14 +70,12 @@ function App() {
           overflowY: 'auto'
         }}>
           {shownStates.map(s => (
-            <Label key={s} sx={{
-              position: 'relative' // make sure hidden <input> elements are positioned correctly
-            }}>
+            <Label key={s}>
               <Checkbox
                 checked={selected[s]}
                 onChange={e => setSelectedK(e.target.checked, s)}
               />
-              {states[s]}
+              {entries[s]}
             </Label>
           ))}
         </Box>
