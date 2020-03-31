@@ -31,10 +31,21 @@ if (!defaultSelected) {
   defaultSelected = _.mapValues(entries, () => false)
 }
 
+let defaultAvgSz = localStorage.getItem('avgSz')
+if (defaultAvgSz !== null) {
+  defaultAvgSz = Number.parseInt(defaultAvgSz)
+} else {
+  defaultAvgSz = 4
+}
+
 function App() {
   const [selected, _setSelected] = useState(defaultSelected);
-  const [avgSz, _setAvgSz] = useState(4);
-  const setAvgSz = useCallback((sz) => _setAvgSz(Math.max(1, sz)), [])
+  const [avgSz, _setAvgSz] = useState(defaultAvgSz);
+  const setAvgSz = useCallback((sz) => {
+    sz = Math.max(1, sz)
+    _setAvgSz(sz)
+    localStorage.setItem('avgSz', sz)
+  }, [])
   const setSelectedK = useCallback((v, k) => _setSelected(s => {
     const o = {...s}
     o[k] = v
