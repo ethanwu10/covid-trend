@@ -26,13 +26,19 @@ const statesFuse = new Fuse(Object.keys(entries).map(k => ({ short: k, long: ent
   keys: ['long']
 })
 
+let defaultSelected = JSON.parse(localStorage.getItem('selected'))
+if (!defaultSelected) {
+  defaultSelected = _.mapValues(entries, () => false)
+}
+
 function App() {
-  const [selected, setSelected] = useState(_.mapValues(entries, () => false));
+  const [selected, _setSelected] = useState(defaultSelected);
   const [avgSz, _setAvgSz] = useState(4);
   const setAvgSz = useCallback((sz) => _setAvgSz(Math.max(1, sz)), [])
-  const setSelectedK = useCallback((v, k) => setSelected(s => {
+  const setSelectedK = useCallback((v, k) => _setSelected(s => {
     const o = {...s}
     o[k] = v
+    localStorage.setItem('selected', JSON.stringify(o))
     return o
   }), []);
 
