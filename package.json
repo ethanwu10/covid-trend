@@ -11,7 +11,7 @@
     "emotion-theming": "^10.0.27",
     "fuse.js": "^5.0.10-beta",
     "lodash": "^4.17.15",
-    "plotly.js": "^1.52.3",
+    "plotly.js": "^2.25.2",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
     "react-plotly.js": "^2.4.0",
